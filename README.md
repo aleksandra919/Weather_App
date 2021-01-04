@@ -1,3 +1,3 @@
 # weatherApp
 
-Technologies used in ths project: JavaScript
+Technologies used in this project: JavaScript
