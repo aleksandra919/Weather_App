@@ -3,9 +3,9 @@ export const getWeatherByCity = city => {
         `https://www.metaweather.com/api/location/search/?query=${city}`
     )
     .then(response =>  response.json())
-    .then(data => { const woeid = data[0].woeid
+    .then(data => { const woeid = data[0].woeid;
         return fetch(
             `https://www.metaweather.com/api/location/${woeid}`
-        ).then(response => response.json().then(data => data))
-    })
+        ).then(response => response.json().then(data => data));
+    });
 }

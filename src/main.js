@@ -1,6 +1,6 @@
-import { getWeatherByCity } from  '../apiService.js'
+import { getWeatherByCity } from  '../apiService.js';
 
-let viewElems = {}
+let viewElems = {};
 
 const getDOMElem = id => document.getElementById(id);
 
@@ -24,8 +24,8 @@ const connectHTMLElems = () => {
 }
 
 const setupListeners = () => {
-    viewElems.searchInput.addEventListener('keydown', onEnterSubmit)
-    viewElems.searchButton.addEventListener('click', onClickSubmit)
+    viewElems.searchInput.addEventListener('keydown', onEnterSubmit);
+    viewElems.searchButton.addEventListener('click', onClickSubmit);
     viewElems.returnToSearchBtn.addEventListener('click', onReturn);
 }
 
@@ -39,7 +39,7 @@ const onEnterSubmit = event => {
         fadeInOut();
         getWeatherByCity(viewElems.searchInput.value)
         .then(data => {
-            displayWeatherData(data)
+            displayWeatherData(data);
         })
     }
 }
@@ -48,22 +48,23 @@ const onClickSubmit = () => {
     fadeInOut();
     getWeatherByCity(viewElems.searchInput.value)
         .then(data => {
-            displayWeatherData(data)
+            displayWeatherData(data);
         })
 }
 
 const switchView = () => {
     if (viewElems.weatherSearchView.style.display !== 'none') {
-        viewElems.weatherSearchView.style.display = 'none'
-        viewElems.weatherForecastView.style.display = 'block'
+        viewElems.weatherSearchView.style.display = 'none';
+        viewElems.weatherForecastView.style.display = 'block';
     } else {
-        viewElems.weatherSearchView.style.display = 'flex'
-        viewElems.weatherForecastView.style.display = 'none'
+        viewElems.weatherSearchView.style.display = 'flex';
+        viewElems.weatherForecastView.style.display = 'none';
     }
 }
 
 const onReturn = () => {
     fadeInOut();
+
     setTimeout(() => {
         switchView();
         fadeInOut();
@@ -72,21 +73,21 @@ const onReturn = () => {
 
 const fadeInOut = () => {
     if (viewElems.mainContainer.style.opacity === '1' || viewElems.mainContainer.style.opacity === '') {
-        viewElems.mainContainer.style.opacity = '0'
+        viewElems.mainContainer.style.opacity = '0';
     } else {
-        viewElems.mainContainer.style.opacity = '1'
+        viewElems.mainContainer.style.opacity = '1';
     }
 }
 
 const displayWeatherData = data => {
-    const weather = data.consolidated_weather[0]
+    const weather = data.consolidated_weather[0];
 
     switchView();
     fadeInOut();
 
     viewElems.weatherCity.innerText = data.title;;
-    viewElems.weatherIcon.src = `https://www.metaweather.com/static/img/weather/${weather.weather_state_abbr}.svg`
-    viewElems.weatherIcon.alt = weather.weather_state_name
+    viewElems.weatherIcon.src = `https://www.metaweather.com/static/img/weather/${weather.weather_state_abbr}.svg`;
+    viewElems.weatherIcon.alt = weather.weather_state_name;
   
     const currentTemp = weather.the_temp.toFixed(2);
     const maxTemp  = weather.max_temp.toFixed(2);
@@ -96,5 +97,4 @@ const displayWeatherData = data => {
     viewElems.weatherMaxTemp.innerText = `Max temperature: ${maxTemp} °C`;
     viewElems.weatherMinTemp.innerText = `Min temperature: ${minTemp} °C`;
 }
-// nie uzywamy nawiasów przy listenerach, tylko przekazujemy referencje funkcji
-document.addEventListener('DOMContentLoaded', initializeApp)
+document.addEventListener('DOMContentLoaded', initializeApp);
