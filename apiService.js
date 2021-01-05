@@ -1,7 +1,3 @@
-
-
-// /api/location/(woeid)/
-
 export const getWeatherByCity = city => {
     return fetch(
         `https://www.metaweather.com/api/location/search/?query=${city}`

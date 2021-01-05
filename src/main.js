@@ -1,6 +1,6 @@
 import { getWeatherByCity } from  '../apiService.js'
 
-const viewElems = {}
+let viewElems = {}
 
 const getDOMElem = id => document.getElementById(id);
 
@@ -26,6 +26,7 @@ const connectHTMLElems = () => {
 const setupListeners = () => {
     viewElems.searchInput.addEventListener('keydown', onEnterSubmit)
     viewElems.searchButton.addEventListener('click', onClickSubmit)
+    viewElems.returnToSearchBtn.addEventListener('click', onReturn);
 }
 
 const initializeApp = () => {
@@ -33,14 +34,52 @@ const initializeApp = () => {
     setupListeners();
 }
 
-const onEnterSubmit = () => {
+const onEnterSubmit = event => {
     if(event.key === 'Enter') {
-        getWeatherByCity(viewElems.searchInput.value).then(data => console.log('data', data))
+        fadeInOut();
+        getWeatherByCity(viewElems.searchInput.value)
+        .then(data => {
+            console.log('data', data)
+            switchView();
+            fadeInOut();
+        })
     }
 }
 
 const onClickSubmit = () => {
-    getWeatherByCity(viewElems.searchInput.value).then(data => console.log('data', data))
+    fadeInOut();
+    getWeatherByCity(viewElems.searchInput.value)
+        .then(data => {
+            console.log('data', data)
+            switchView();
+            fadeInOut();
+        })
+}
+
+const switchView = () => {
+    if (viewElems.weatherSearchView.style.display !== 'none') {
+        viewElems.weatherSearchView.style.display = 'none'
+        viewElems.weatherForecastView.style.display = 'block'
+    } else {
+        viewElems.weatherSearchView.style.display = 'flex'
+        viewElems.weatherForecastView.style.display = 'none'
+    }
+}
+
+const onReturn = () => {
+    fadeInOut();
+    setTimeout(() => {
+        switchView();
+        fadeInOut();
+    },500);
+}
+
+const fadeInOut = () => {
+    if (viewElems.mainContainer.style.opacity === '1' || viewElems.mainContainer.style.opacity === '') {
+        viewElems.mainContainer.style.opacity = '0'
+    } else {
+        viewElems.mainContainer.style.opacity = '1'
+    }
 }
 
 // nie uzywamy nawiasów przy listenerach, tylko przekazujemy referencje funkcji
