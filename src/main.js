@@ -39,9 +39,7 @@ const onEnterSubmit = event => {
         fadeInOut();
         getWeatherByCity(viewElems.searchInput.value)
         .then(data => {
-            console.log('data', data)
-            switchView();
-            fadeInOut();
+            displayWeatherData(data)
         })
     }
 }
@@ -50,9 +48,7 @@ const onClickSubmit = () => {
     fadeInOut();
     getWeatherByCity(viewElems.searchInput.value)
         .then(data => {
-            console.log('data', data)
-            switchView();
-            fadeInOut();
+            displayWeatherData(data)
         })
 }
 
@@ -82,5 +78,23 @@ const fadeInOut = () => {
     }
 }
 
+const displayWeatherData = data => {
+    const weather = data.consolidated_weather[0]
+
+    switchView();
+    fadeInOut();
+
+    viewElems.weatherCity.innerText = data.title;;
+    viewElems.weatherIcon.src = `https://www.metaweather.com/static/img/weather/${weather.weather_state_abbr}.svg`
+    viewElems.weatherIcon.alt = weather.weather_state_name
+  
+    const currentTemp = weather.the_temp.toFixed(2);
+    const maxTemp  = weather.max_temp.toFixed(2);
+    const minTemp  = weather.min_temp.toFixed(2);
+
+    viewElems.weatherCurrentTemp.innerText = `Current temperature: ${currentTemp} °C`;
+    viewElems.weatherMaxTemp.innerText = `Max temperature: ${maxTemp} °C`;
+    viewElems.weatherMinTemp.innerText = `Min temperature: ${minTemp} °C`;
+}
 // nie uzywamy nawiasów przy listenerach, tylko przekazujemy referencje funkcji
 document.addEventListener('DOMContentLoaded', initializeApp)
