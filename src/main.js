@@ -1,6 +1,8 @@
+import { getWeatherByCity } from  '../apiService.js'
+
 const viewElems = {}
 
-const getDOMElem = id => { return document.getElementById(id) }
+const getDOMElem = id => document.getElementById(id);
 
 const connectHTMLElems = () => {
     viewElems.mainContainer = getDOMElem('mainContainer');
@@ -31,12 +33,14 @@ const initializeApp = () => {
     setupListeners();
 }
 
-const onEnterSubmit = () {
-    console.log('on enter submit')
+const onEnterSubmit = () => {
+    if(event.key === 'Enter') {
+        getWeatherByCity(viewElems.searchInput.value).then(data => console.log('data', data))
+    }
 }
 
-const onClickSubmit = () {
-    console.log('on click submit')
+const onClickSubmit = () => {
+    getWeatherByCity(viewElems.searchInput.value).then(data => console.log('data', data))
 }
 
 // nie uzywamy nawiasów przy listenerach, tylko przekazujemy referencje funkcji
