@@ -24,11 +24,17 @@ class WeatherApp {
     }
 
     handleSubmit = (event) => {
-        if(event.key === 'Enter' || event.type === 'click') {
+        if (event.key === 'Enter' || event.type === 'click') {
+            this.viewElems.searchInput.style.borderColor = 'black';
+            this.viewElems.errorText.innerText  = ''
             this.fadeInOut();
             getWeatherByCity(this.viewElems.searchInput.value)
             .then(data => {
                 this.displayWeatherData(data);
+            }).catch(() => {
+                this.fadeInOut();
+                this.viewElems.searchInput.style.borderColor = 'red';
+                this.viewElems.errorText.innerText = 'Could not find. Please try again.'
             })
         }
     }
@@ -71,8 +77,8 @@ class WeatherApp {
     }
 
     returnToSearchBtn = () => {
+        this.viewElems.searchInput.value = ''
         this.fadeInOut();
-    
         setTimeout(() => {
             this.switchView();
             this.fadeInOut();
