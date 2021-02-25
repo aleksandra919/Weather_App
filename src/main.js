@@ -1,15 +1,17 @@
-import { getWeatherByCity } from  '../apiService.js';
+import { getWeatherByCity, getWeatherByCityAndDate } from  '../apiService.js';
 import { mapIdListToDOMElements } from './DOMActions.js'
 
 class WeatherApp {
     constructor() {
         this.viewElems = {};
         this.initializeApp();
+        this.selectedDate;
     }
 
     initializeApp = () => {
         this.connectToDOMElements();
         this.setupListeners();
+        this.setupToday();
     }
 
     connectToDOMElements = () => {
@@ -20,7 +22,16 @@ class WeatherApp {
     setupListeners = () => {
         this.viewElems.searchInput.addEventListener('keydown', this.handleSubmit);
         this.viewElems.searchButton.addEventListener('click', this.handleSubmit);
+        this.viewElems.searchInput.addEventListener('change', this.handleInputChange);
         this.viewElems.returnToSearchBtn.addEventListener('click', this.returnToSearchBtn);
+        this.viewElems.selectedDate.addEventListener('change', this.handleDateChange);
+    }
+
+    setupToday = () => {
+        const date = new Date();
+        const month = date.getMonth().length < 1 ? date.getMonth() +1 : `0${(date.getMonth()+1)}`
+        this.viewElems.selectedDate.defaultValue = `${date.getFullYear()}-${month}-${date.getDate()}`
+        this.selectedDate = this.viewElems.selectedDate.defaultValue
     }
 
     handleSubmit = (event) => {
@@ -30,13 +41,31 @@ class WeatherApp {
             this.fadeInOut();
             getWeatherByCity(this.viewElems.searchInput.value)
             .then(data => {
-                this.displayWeatherData(data);
+                this.viewElems.weatherCity.innerText = data.title;;
+                this.switchView();
+                this.fadeInOut();
+                this.displayWeatherData(data.consolidated_weather[0]);
             }).catch(() => {
                 this.fadeInOut();
                 this.viewElems.searchInput.style.borderColor = 'red';
                 this.viewElems.errorText.innerText = 'Could not find. Please try again.'
             })
         }
+    }
+
+    handleDateChange = (event) => {
+        this.selectedDate = event.target.value
+        this.fadeInOut();
+        getWeatherByCityAndDate(this.viewElems.searchInput.value, this.selectedDate.replaceAll('-', '/'))
+        .then(data => {
+            this.fadeInOut();
+            this.displayWeatherData(data[0]);
+        })
+    }
+
+    handleInputChange = () => {
+        this.viewElems.searchInput.style.borderColor = 'black';
+        this.viewElems.errorText.innerText = ''
     }
 
     fadeInOut = () => {
@@ -57,19 +86,13 @@ class WeatherApp {
         }
     }
     
-    displayWeatherData = data => {
-        const weather = data.consolidated_weather[0];
-    
-        this.switchView();
-        this.fadeInOut();
-    
-        this.viewElems.weatherCity.innerText = data.title;;
-        this.viewElems.weatherIcon.src = `https://www.metaweather.com/static/img/weather/${weather.weather_state_abbr}.svg`;
-        this.viewElems.weatherIcon.alt = weather.weather_state_name;
+    displayWeatherData = weatherData => {
+        this.viewElems.weatherIcon.src = `https://www.metaweather.com/static/img/weather/${weatherData.weather_state_abbr}.svg`;
+        this.viewElems.weatherIcon.alt = weatherData.weather_state_name;
       
-        const currentTemp = weather.the_temp.toFixed(2);
-        const maxTemp  = weather.max_temp.toFixed(2);
-        const minTemp  = weather.min_temp.toFixed(2);
+        const currentTemp = weatherData.the_temp.toFixed(2);
+        const maxTemp  = weatherData.max_temp.toFixed(2);
+        const minTemp  = weatherData.min_temp.toFixed(2);
     
         this.viewElems.weatherCurrentTemp.innerText = `Current temperature: ${currentTemp} °C`;
         this.viewElems.weatherMaxTemp.innerText = `Max temperature: ${maxTemp} °C`;

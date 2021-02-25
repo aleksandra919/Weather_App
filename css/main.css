@@ -60,6 +60,17 @@ main {
   font-size: 100%;
 }
 
+button {
+  color: #fff !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #60a3bc;
+  padding: 20px;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s;
+}
+
 .weather-info__forecast-view {
   display: none;
 }
@@ -70,7 +81,11 @@ main {
   align-items: center;
 }
 
-.weather-info__btn-return {
+.weather-info__city #weatherIcon {
+  width: 120px;
+}
+
+.weather-info__btn {
   padding: 5px 25px;
   border: 2px solid black;
 }
